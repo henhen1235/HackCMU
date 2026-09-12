@@ -31,7 +31,7 @@ last_note/last_cmd are anti-echo — change TACTIC or WHY.
 OUTPUT (exactly):
 <thinking>TACTIC: <playbook_name> | WHY: <one sit fact></thinking>
 {{"dx":<-1..1>,"dy":<-1..1>,"shoot":true}}
-shoot=true if bot.ready unless blocked. Prefer to_enemy; hug INTERIOR cover only.
+shoot=true ALWAYS when bot.ready — never hold fire. Prefer to_enemy; hug INTERIOR cover only.
 
 STATE:
 {GAME_STATE_JSON}

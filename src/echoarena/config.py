@@ -30,8 +30,8 @@ PLANNER_WORKERS = 8
 PLANNER_TIMEOUT_S = 6.0
 PLANNER_MAX_TOKENS = 300
 PLANNER_429_BACKOFF_S = 4.0
-# Drop stale LLM packets quickly so the bot doesn't ride an old plan
-INTENT_MAX_AGE_S = 1.5
+# Keep LLM packets long enough to cover ~1.2–1.5s Grok latency
+INTENT_MAX_AGE_S = 3.0
 DEFAULT_LATENCY_MS = 300
 MIN_WALL_CLEARANCE = 50
 PROFILE_PATH_REL = ("data", "player_profile.txt")

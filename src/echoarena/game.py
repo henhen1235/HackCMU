@@ -29,6 +29,7 @@ from echoarena.config import (
     PLANNER_TIMEOUT_S,
     PLANNER_WORKERS,
     PLAYER_SPEED,
+    PROJECTILE_SPEED,
     SCREEN_H,
     SCREEN_W,
     TELEMETRY_INTERVAL,
@@ -568,8 +569,14 @@ def play_round(
             )
 
             if rfire and bot.ready_to_fire():
+                # Ballistic lead (time-of-flight) — human does this with the mouse;
+                # fair aim math, not a hidden speed buff.
+                dist = math.hypot(human.x - bot.x, human.y - bot.y) or 1.0
+                t_flight = dist / PROJECTILE_SPEED
+                aim_x = human.x + human.vx * t_flight
+                aim_y = human.y + human.vy * t_flight
                 shot = bot.shoot_at(
-                    lead_x, lead_y, "bot", cooldown=difficulty.bot_cooldown
+                    aim_x, aim_y, "bot", cooldown=difficulty.bot_cooldown
                 )
                 if shot:
                     shots.append(shot)

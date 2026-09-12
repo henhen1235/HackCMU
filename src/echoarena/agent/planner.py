@@ -256,7 +256,8 @@ async def run_planner(
 
         mx = float(intent["mx"])
         my = float(intent["my"])
-        fire = bool(intent["fire"])
+        # Holding fire made the bot lose fights — always shoot when ready.
+        fire = True
 
         # Break vector latch: same nearly-identical packet for 2+ accepts → recompute.
         if last_cmd is not None:
