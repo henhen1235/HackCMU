@@ -1,0 +1,178 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #0e0c0a;
+  font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+  color: #e8dcc8;
+  cursor: none;
+}
+canvas {
+  display: block;
+}
+
+/* Center crosshair */
+#crosshair {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  width: 22px;
+  height: 22px;
+  transform: translate(-50%, -50%);
+  z-index: 6;
+  pointer-events: none;
+}
+#crosshair .ch {
+  position: absolute;
+  background: rgba(232, 220, 200, 0.92);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.45);
+}
+#crosshair .ch-h {
+  left: 0;
+  top: 50%;
+  width: 100%;
+  height: 2px;
+  margin-top: -1px;
+}
+#crosshair .ch-v {
+  top: 0;
+  left: 50%;
+  width: 2px;
+  height: 100%;
+  margin-left: -1px;
+}
+#crosshair .ch-dot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 3px;
+  height: 3px;
+  margin: -1.5px 0 0 -1.5px;
+  border-radius: 50%;
+  background: #d29646;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5);
+}
+
+/* LLM / ablation readouts stay top-left */
+#hud-top {
+  position: fixed;
+  left: 16px;
+  top: 14px;
+  z-index: 5;
+  pointer-events: none;
+  text-shadow: 0 1px 2px #000;
+  max-width: min(440px, 92vw);
+}
+#hud-top .brand {
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #d29646;
+  margin-right: 10px;
+}
+#hud-top #mode {
+  font-weight: 700;
+  padding: 1px 8px;
+  border: 1px solid #d29646;
+  border-radius: 4px;
+  font-size: 12px;
+}
+#hud-top .row {
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+#hud-top .meta {
+  color: #d2c4a8;
+  font-size: 13px;
+}
+#hud-top .note {
+  color: #cbb896;
+  font-size: 13px;
+  line-height: 1.35;
+}
+#hud-top .hint {
+  color: #8a7a62;
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+/* HP bars at bottom */
+#hud-bottom {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%);
+  z-index: 5;
+  pointer-events: none;
+  display: flex;
+  gap: 28px;
+  width: min(640px, 92vw);
+  text-shadow: 0 1px 2px #000;
+}
+.hp-block {
+  flex: 1;
+}
+.hp-label {
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+  color: #cbb896;
+}
+.hp-label b {
+  color: #e8dcc8;
+  font-size: 16px;
+  margin-left: 6px;
+}
+.hp-track {
+  height: 12px;
+  border-radius: 3px;
+  background: rgba(20, 16, 12, 0.85);
+  border: 1px solid rgba(210, 150, 70, 0.35);
+  overflow: hidden;
+}
+.hp-fill {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #6a9a48, #b8d46a);
+  transition: width 0.12s linear;
+}
+.hp-fill.bot {
+  background: linear-gradient(90deg, #a03a2a, #e07050);
+}
+.hp-block.foe .hp-label {
+  text-align: right;
+}
+
+#overlay,
+#end {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(8, 6, 5, 0.72);
+  text-align: center;
+}
+#overlay.hidden,
+#end.hidden {
+  display: none;
+}
+#overlay-text,
+#end-text {
+  font-size: 42px;
+  font-weight: 700;
+  color: #e8dcc8;
+  letter-spacing: 0.06em;
+}
+.sub {
+  margin-top: 10px;
+  color: #a89478;
+  font-size: 15px;
+}

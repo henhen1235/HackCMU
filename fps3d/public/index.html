@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EchoArena FPS — 3D slice</title>
+    <link rel="stylesheet" href="/style.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.170.0/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@0.170.0/examples/jsm/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="crosshair" aria-hidden="true">
+      <span class="ch ch-h"></span>
+      <span class="ch ch-v"></span>
+      <span class="ch-dot"></span>
+    </div>
+
+    <div id="hud-top">
+      <div class="row">
+        <span class="brand">EchoArena FPS</span>
+        <span id="mode">LLM</span>
+      </div>
+      <div class="row meta">
+        Intent <span id="iage">—</span>
+        · Lat <span id="lat">—</span>
+        · In-flight <span id="inflight">0</span>
+      </div>
+      <div class="row note" id="note">
+        Click to lock mouse · WASD move · Click / Space fire
+      </div>
+      <div class="row hint">P pause · Tab (paused) LOCAL↔LLM</div>
+    </div>
+
+    <div id="hud-bottom">
+      <div class="hp-block you">
+        <div class="hp-label">YOU <b id="php">100</b></div>
+        <div class="hp-track"><div class="hp-fill" id="php-fill"></div></div>
+      </div>
+      <div class="hp-block foe">
+        <div class="hp-label">BOT <b id="bhp">100</b></div>
+        <div class="hp-track"><div class="hp-fill bot" id="bhp-fill"></div></div>
+      </div>
+    </div>
+
+    <div id="overlay" class="hidden">
+      <div id="overlay-text">PAUSED</div>
+      <div class="sub">Tab = switch brain · P = resume</div>
+    </div>
+    <div id="end" class="hidden">
+      <div id="end-text">You win</div>
+      <div class="sub">R / Click to restart</div>
+    </div>
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>

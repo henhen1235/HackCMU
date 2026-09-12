@@ -38,6 +38,16 @@ A second window shows judge-facing metrics (mode, latency, LLM drive %, fair due
 
 Fair rules stay identical (same speed & cooldown) in both modes. Only the brain changes.
 
+## 3D proof (separate)
+
+Same ablation story in a browser FPS — fully isolated under [`fps3d/`](fps3d/) (no imports from this package):
+
+```bash
+cd fps3d && npm install && npm start
+```
+
+See [fps3d/README.md](fps3d/README.md). The tank demo (`python run.py`) is unchanged if the 3D slice breaks.
+
 ## Setup
 
 ```bash
