@@ -23,16 +23,17 @@ MAX_HEALTH = 100
 BOT_LEAD_TIME = 0.0
 
 TELEMETRY_INTERVAL = 0.25
-# Grok is fast enough for near-original cadence (old used 0.25s × 4 workers)
-PLANNER_INTERVAL = 0.5
-PLANNER_MAX_IN_FLIGHT = 2
-PLANNER_WORKERS = 2
+# Grok is fast + rarely rate-limits — denser pipeline for fresher thinking
+PLANNER_INTERVAL = 0.2
+PLANNER_MAX_IN_FLIGHT = 8
+PLANNER_WORKERS = 8
 PLANNER_TIMEOUT_S = 6.0
 PLANNER_MAX_TOKENS = 300
 PLANNER_429_BACKOFF_S = 4.0
+# Drop stale LLM packets quickly so the bot doesn't ride an old plan
+INTENT_MAX_AGE_S = 1.5
 DEFAULT_LATENCY_MS = 300
 MIN_WALL_CLEARANCE = 50
-
 PROFILE_PATH_REL = ("data", "player_profile.txt")
 
 

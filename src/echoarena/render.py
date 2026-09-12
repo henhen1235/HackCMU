@@ -118,12 +118,19 @@ def paint_hud(
     fps: float,
     flash: float,
     layout: ArenaLayout,
+    *,
+    agent_mode: str = "LLM",
+    game_paused: bool = False,
 ) -> None:
     del layout
     _hp_bar(surf, 16, 28, human.hp, 140, "YOU", PALETTE["human"])
     _hp_bar(surf, SCREEN_W - 156, 28, bot.hp, 140, "ECHO", PALETTE["bot"])
 
     font = _FONT_SM or pygame.font.SysFont("georgia", 14)
+    mode_f = pygame.font.SysFont("georgia", 18, bold=True)
+    mode_color = (180, 200, 120) if agent_mode == "LOCAL" else PALETTE["accent"]
+    surf.blit(mode_f.render(f"MODE {agent_mode}", True, mode_color), (16, 52))
+
     mx, my, fire = intent
     panel = pygame.Surface((230, 130), pygame.SRCALPHA)
     pygame.draw.rect(panel, (20, 16, 12, 180), (0, 0, 230, 130), border_radius=6)
@@ -148,6 +155,26 @@ def paint_hud(
         veil = pygame.Surface((SCREEN_W, SCREEN_H), pygame.SRCALPHA)
         veil.fill((*PALETTE["flash"], int(90 * flash / 0.35)))
         surf.blit(veil, (0, 0))
+
+    if game_paused:
+        paint_pause_overlay(surf, agent_mode)
+
+
+def paint_pause_overlay(surf: pygame.Surface, agent_mode: str) -> None:
+    """Frozen match overlay — switch brains with Tab while paused."""
+    overlay = pygame.Surface((SCREEN_W, SCREEN_H), pygame.SRCALPHA)
+    overlay.fill((8, 6, 5, 150))
+    surf.blit(overlay, (0, 0))
+    big = pygame.font.SysFont("georgia", 56, bold=True)
+    mid = pygame.font.SysFont("georgia", 24, bold=True)
+    small = pygame.font.SysFont("georgia", 18)
+    title = big.render("PAUSED", True, PALETTE["ink"])
+    surf.blit(title, title.get_rect(center=(SCREEN_W // 2, SCREEN_H // 2 - 40)))
+    mode_color = (180, 200, 120) if agent_mode == "LOCAL" else PALETTE["accent"]
+    mode = mid.render(f"MODE  {agent_mode}", True, mode_color)
+    surf.blit(mode, mode.get_rect(center=(SCREEN_W // 2, SCREEN_H // 2 + 20)))
+    hint = small.render("Tab switch LOCAL/LLM    P resume", True, PALETTE["think"])
+    surf.blit(hint, hint.get_rect(center=(SCREEN_W // 2, SCREEN_H // 2 + 60)))
 
 
 def show_game_over(surf: pygame.Surface, winner: str, status: str = "") -> None:

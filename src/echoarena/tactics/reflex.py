@@ -39,8 +39,8 @@ _BODY_R = 16
 _SHOT_R = 5
 _HIT_PAD = _BODY_R + _SHOT_R + 14  # wider "will hit" cone
 _LOOKAHEAD = 1.85  # react earlier to distant incoming shots
-_SOFT_EDGE = 42
-_PUSH = 2.2
+_SOFT_EDGE = 22  # was 42 — large bubble kept LLM from hugging cover
+_PUSH = 1.6
 _DODGE_GAIN = 5.8  # heavier weight on dodge vectors
 _PLAN_KEEP = 0.12  # less LLM intent survives while dodging (was 0.30)
 _MISS_MULT = 3.2  # treat near-misses as threats (was 2.5)
@@ -53,11 +53,14 @@ def _unit(dx: float, dy: float) -> tuple[float, float]:
     return dx / mag, dy / mag
 
 
-def cardinal_clearances(
-    body: AgentBody, walls: list[Barrier], arena_w: int, arena_h: int
-) -> list[float]:
-    """Distances to nearest surface: north, east, south, west."""
-    n, e, s, w = body.y, arena_w - body.x, arena_h - body.y, body.x
+def border_clearances(x: float, y: float, arena_w: int, arena_h: int) -> list[float]:
+    """Distance to arena borders only (N,E,S,W). Not usable as cover."""
+    return [y, arena_w - x, arena_h - y, x]
+
+
+def cover_clearances(body: AgentBody, walls: list[Barrier]) -> list[float]:
+    """Distance to nearest *interior* barrier on each cardinal (N,E,S,W)."""
+    n = e = s = w = 999.0
     for wall in walls:
         x1, y1 = wall.x, wall.y
         x2, y2 = wall.x + wall.w, wall.y + wall.h
@@ -70,6 +73,15 @@ def cardinal_clearances(
         if x1 >= body.x and y1 <= body.y <= y2:
             e = min(e, x1 - body.x)
     return [n, e, s, w]
+
+
+def cardinal_clearances(
+    body: AgentBody, walls: list[Barrier], arena_w: int, arena_h: int
+) -> list[float]:
+    """Nearest surface including borders + interior cover: north, east, south, west."""
+    bn, be, bs, bw = border_clearances(body.x, body.y, arena_w, arena_h)
+    cn, ce, cs, cw = cover_clearances(body, walls)
+    return [min(bn, cn), min(be, ce), min(bs, cs), min(bw, cw)]
 
 
 def _closest_approach(
@@ -181,8 +193,8 @@ def apply_tactics(
         dx, dy = plan_dx, plan_dy
 
     wx, wy = _soft_push(body.x, body.y, walls, arena_w, arena_h)
-    # Stronger wall bias while dodging so we don't slide into cover-traps
-    wall_w = 0.7 if threats else 0.5
+    # Light wall bias — allow hugging cover; only unstick when nearly embedded
+    wall_w = 0.45 if threats else 0.22
     dx += wx * wall_w
     dy += wy * wall_w
 

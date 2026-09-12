@@ -106,6 +106,8 @@ class MetricsSnapshot:
     model_name: str
     move_speed: float
     fire_cooldown_s: float
+    agent_mode: str
+    game_paused: bool
 
 
 class MetricsRegistry:
@@ -170,6 +172,8 @@ class MetricsRegistry:
         self._model_name = "—"
         self._move_speed = 200.0
         self._fire_cooldown_s = 0.22
+        self._agent_mode = "LLM"
+        self._game_paused = False
 
     def reset(self) -> None:
         with self._lock:
@@ -214,6 +218,8 @@ class MetricsRegistry:
             self._player_alive = True
             self._bot_alive = True
             self._distance_px = 0.0
+            self._agent_mode = "LLM"
+            self._game_paused = False
 
     def configure_planner(
         self,
@@ -241,6 +247,14 @@ class MetricsRegistry:
             self._move_speed = float(move_speed)
             self._fire_cooldown_s = float(fire_cooldown_s)
             self._match_start = time.monotonic()
+
+    def set_agent_mode(self, mode: str) -> None:
+        with self._lock:
+            self._agent_mode = mode if mode in ("LOCAL", "LLM") else "LLM"
+
+    def set_game_paused(self, paused: bool) -> None:
+        with self._lock:
+            self._game_paused = bool(paused)
 
     def set_fps(self, fps: float) -> None:
         fps = max(0.0, float(fps))
@@ -483,6 +497,8 @@ class MetricsRegistry:
                 model_name=self._model_name,
                 move_speed=self._move_speed,
                 fire_cooldown_s=self._fire_cooldown_s,
+                agent_mode=self._agent_mode,
+                game_paused=self._game_paused,
             )
 
 

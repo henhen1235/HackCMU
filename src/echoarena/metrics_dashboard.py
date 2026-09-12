@@ -7,7 +7,7 @@ import pygame
 from echoarena.metrics import MetricsSnapshot
 
 DASH_W = 340
-DASH_H = 420
+DASH_H = 460
 
 BG = (12, 12, 12)
 INK = (220, 220, 220)
@@ -69,6 +69,10 @@ def render_metrics_dashboard(snap: MetricsSnapshot) -> pygame.Surface:
         ),
         (x, y),
     )
+
+    y = _head(surf, "ABLATION", x, y, fh)
+    y = _row(surf, "paused", "yes" if snap.game_paused else "no", x, y, fl, fv)
+    y = _row(surf, "mode", snap.agent_mode, x, y, fl, fv)
 
     y = _head(surf, "LLM RETURN", x, y, fh)
     if snap.last_instance >= 0:
