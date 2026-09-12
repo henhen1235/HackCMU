@@ -10,7 +10,7 @@ frame-perfect dodges and wall avoidance so gameplay never waits on inference.
 1. **Simulation (60 FPS)** — movement, projectiles, collisions, rendering
 2. **Planner (async xAI Grok)** — pipelined intent packets `{mx, my, fire}`
 3. **Tactics reflex** — time-of-closest-approach dodge + soft wall push
-4. **Ablation** — pause and switch **LOCAL** (reflex only) vs **LLM** (pipelined)
+4. **Ablation** — pause and switch **LOCAL** (blind chase baseline) vs **LLM** (pipelined)
 5. **Profile memory** — end-of-match summaries injected into later prompts
 
 ## Controls
@@ -32,11 +32,11 @@ A second window shows judge-facing metrics (mode, latency, LLM drive %, fair due
 
 1. Start in **LLM** — watch intent age, latency, and `llm drive %`
 2. Press **P** — match freezes; planner stops spending
-3. Press **Tab** — switch to **LOCAL**
-4. Press **P** — resume; bot still fights, `llm drive` drops toward 0
-5. Pause → Tab → **LLM** → resume — intents return
+3. Press **Tab** — switch to **LOCAL** (blind chase; no dodge / no strategy)
+4. Press **P** — resume; bot rushes you in a straight line, `llm drive` → 0
+5. Pause → Tab → **LLM** → resume — intents and smart play return
 
-Fair rules stay identical (same speed & cooldown) in both modes.
+Fair rules stay identical (same speed & cooldown) in both modes. Only the brain changes.
 
 ## Setup
 
@@ -78,5 +78,5 @@ data/player_profile.txt
 
 LLMs are strong at strategy and weak at frame timing. EchoArena splits those
 jobs: the planner thinks ahead; tactics reacts now. Pause + LOCAL/LLM ablation
-makes the Optimization claim obvious — FPS stays live while you prove the
-pipelined brain is optional, not load-bearing for the 60 FPS loop.
+makes the Optimization claim obvious — LOCAL is a dumb blind chase; LLM adds
+strategy on the same fair physics. FPS stays live either way.
